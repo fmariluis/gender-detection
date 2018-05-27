@@ -1,7 +1,6 @@
 (ns gender-detection.helpers
   (:require [clojure.data.csv :as csv]
-            [clojure.java.io :as io]
-            [taoensso.nippy :as nippy]))
+            [clojure.java.io :as io]))
 
 ;; library development helpers, not really useful to final users
 
@@ -11,6 +10,8 @@
     (doall
      (csv/read-csv reader))))
 
-(defn- csv-to-nippy [name]
+(defn- csv-to-edn [name]
   (let [data (read-csv name)]
-    (nippy/freeze-to-file "resources/db.npy" data)))
+    (with-open [w (io/writer "resources/data.clj")]
+      (binding [*out* w]
+        (pr data)))))

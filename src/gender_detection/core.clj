@@ -1,26 +1,29 @@
 (ns gender-detection.core
-  (:require [taoensso.nippy :as nippy]
-            [superstring.core :as str]
-            [clojure.java.io :as io]))
+  (:require [superstring.core :as str]
+            [clojure.java.io :as io]
+            [clojure.java.jdbc :as j])
+  (:gen-class))
 
-(def npy-file (io/resource "db.npy"))
+;; we have to build the conn string like this to load the resource
+(def db-conn {:connection-uri (str "jdbc:sqlite::resource:" (str (io/resource "names.db")))})
 
-(defn clean-name
+(defn- clean-name
   [name]
   (-> name
       (str/strip-accents)
       (str/lower-case)))
 
 (defn- filter-names [name]
-  (let [names (nippy/thaw-from-file npy-file)]
-    (first (filter #(= (str/lower-case (first %)) (clean-name name)) names))))
+  (let [cleaned-name (clean-name name)
+        result (j/query db-conn ["SELECT sex FROM names WHERE name LIKE ?" cleaned-name])]
+    (first result)))
 
 (defn find-gender [name]
   (let [result (filter-names name)]
     (cond
       (nil? result) nil
-      (= (nth result 1) "M") :M
-      (= (nth result 1) "F") :F)))
+      (= (:sex result) "M") :M
+      (= (:sex result) "F") :F)))
 
 (defn female? [name]
   (let [result (find-gender name)]
