@@ -1,5 +1,7 @@
 # gender-detection
 
+[![Clojars Project](https://img.shields.io/clojars/v/gender-detection.svg)](https://clojars.org/gender-detection)
+
 Simple library to detect the gender of a name. The current version only support spanish names.
 
 ## Install
