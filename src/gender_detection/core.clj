@@ -15,15 +15,15 @@
 
 (defn- filter-names [name]
   (let [cleaned-name (clean-name name)
-        result (j/query db-conn ["SELECT sex FROM names WHERE name LIKE ?" cleaned-name])]
+        result (j/query db-conn ["SELECT gender FROM names WHERE name LIKE ?" cleaned-name])]
     (first result)))
 
 (defn find-gender [name]
   (let [result (filter-names name)]
     (cond
       (nil? result) nil
-      (= (:sex result) "M") :M
-      (= (:sex result) "F") :F)))
+      (= (:gender result) "M") :M
+      (= (:gender result) "F") :F)))
 
 (defn female? [name]
   (let [result (find-gender name)]
