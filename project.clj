@@ -1,4 +1,4 @@
-(defproject gender-detection "0.1.0"
+(defproject gender-detection "0.1.1"
   :description "Simple gender detection for first names"
   :url "https://github.com/fmariluis/gender-detection"
   :license {:name "Eclipse Public License"
