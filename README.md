@@ -4,7 +4,7 @@
 
 [![Build Status](https://travis-ci.org/fmariluis/gender-detection.svg?branch=master)](https://travis-ci.org/fmariluis/gender-detection)
 
-Simple library to detect the gender of a name. The current version support English and Spanish names.
+Simple library to detect the gender of a name. The current version supports English and Spanish names.
 
 ## Install
 
