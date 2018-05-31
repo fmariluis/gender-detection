@@ -13,22 +13,32 @@
       (str/strip-accents)
       (str/lower-case)))
 
-(defn- filter-names [name]
+(defn- filter-names [name language]
   (let [cleaned-name (clean-name name)
-        result (j/query db-conn ["SELECT gender FROM names WHERE name LIKE ?" cleaned-name])]
+        cleaned-language (clojure.core/name language)
+        result (j/query db-conn ["SELECT gender FROM names WHERE name LIKE ? AND language = ?" cleaned-name cleaned-language])
+        ]
     (first result)))
 
-(defn find-gender [name]
-  (let [result (filter-names name)]
+(defn find-gender [name language]
+  (let [result (filter-names name language)]
     (cond
       (nil? result) nil
       (= (:gender result) "M") :M
       (= (:gender result) "F") :F)))
 
-(defn female? [name]
-  (let [result (find-gender name)]
-    (= :F result)))
+(defn female? [name language]
+  (let [result (find-gender name language)]
+    (cond
+      (nil? result) nil
+      (= result :M) false
+      (= result :F) true)
+    ))
 
-(defn male? [name]
-  (let [result (find-gender name)]
-    (= :M result)))
+(defn male? [name language]
+  (let [result (find-gender name language)]
+    (cond
+      (nil? result) nil
+      (= result :F) false
+      (= result :M) true)
+    ))
